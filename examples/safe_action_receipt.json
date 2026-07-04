@@ -1,0 +1,17 @@
+{
+  "receipt_id": "synthetic-receipt-safe-001",
+  "action_id": "synthetic-action-001",
+  "action_type": "summarize_public_document",
+  "requested_by": "synthetic_user",
+  "decision": "allowed",
+  "reason": "The action uses public synthetic content and does not require privileged access.",
+  "risk_level": "low",
+  "human_review": {
+    "required": false,
+    "status": "not_required",
+    "reviewer_role": "none",
+    "notes": "Low-risk synthetic action."
+  },
+  "timestamp": "2026-01-01T00:00:00Z",
+  "redaction_status": "public_synthetic"
+}

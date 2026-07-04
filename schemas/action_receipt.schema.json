@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synthetic Agent Action Receipt",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "action_id",
+    "action_type",
+    "requested_by",
+    "decision",
+    "reason",
+    "risk_level",
+    "human_review",
+    "timestamp",
+    "redaction_status"
+  ],
+  "properties": {
+    "receipt_id": { "type": "string" },
+    "action_id": { "type": "string" },
+    "action_type": { "type": "string" },
+    "requested_by": { "type": "string" },
+    "decision": {
+      "type": "string",
+      "enum": ["allowed", "blocked"]
+    },
+    "reason": { "type": "string" },
+    "risk_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "human_review": { "$ref": "human_review.schema.json" },
+    "timestamp": { "type": "string" },
+    "redaction_status": {
+      "type": "string",
+      "enum": ["public_synthetic"]
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synthetic Human Review Metadata",
+  "type": "object",
+  "required": [
+    "required",
+    "status",
+    "reviewer_role"
+  ],
+  "properties": {
+    "required": { "type": "boolean" },
+    "status": {
+      "type": "string",
+      "enum": ["not_required", "pending", "approved", "blocked"]
+    },
+    "reviewer_role": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,17 @@
+{
+  "receipt_id": "synthetic-receipt-blocked-001",
+  "action_id": "synthetic-action-002",
+  "action_type": "send_external_message",
+  "requested_by": "synthetic_user",
+  "decision": "blocked",
+  "reason": "The action would communicate externally and requires human review before execution.",
+  "risk_level": "medium",
+  "human_review": {
+    "required": true,
+    "status": "pending",
+    "reviewer_role": "human_operator",
+    "notes": "External action held for review."
+  },
+  "timestamp": "2026-01-01T00:01:00Z",
+  "redaction_status": "public_synthetic"
+}
