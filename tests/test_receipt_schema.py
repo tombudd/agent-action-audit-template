@@ -5,7 +5,8 @@ import json
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator, RefResolver
+from jsonschema import Draft202012Validator
+from referencing import Registry, Resource
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,11 +30,11 @@ PROHIBITED_MARKERS = [
 def action_validator() -> Draft202012Validator:
     action_schema = _load_json(ACTION_SCHEMA)
     human_review_schema = _load_json(HUMAN_REVIEW_SCHEMA)
-    resolver = RefResolver.from_schema(
-        action_schema,
-        store={"human_review.schema.json": human_review_schema},
+    registry = Registry().with_resource(
+        uri="human_review.schema.json",
+        resource=Resource.from_contents(human_review_schema),
     )
-    return Draft202012Validator(action_schema, resolver=resolver)
+    return Draft202012Validator(action_schema, registry=registry)
 
 
 def test_safe_action_receipt_matches_schema(action_validator: Draft202012Validator) -> None:
