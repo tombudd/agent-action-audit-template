@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import copy
 import json
 from pathlib import Path
+
+import pytest
+from jsonschema import Draft202012Validator, RefResolver
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,22 +25,29 @@ PROHIBITED_MARKERS = [
 ]
 
 
-def test_safe_action_receipt_matches_schema() -> None:
-    receipt = _load_json(SAFE_RECEIPT)
+@pytest.fixture()
+def action_validator() -> Draft202012Validator:
     action_schema = _load_json(ACTION_SCHEMA)
     human_review_schema = _load_json(HUMAN_REVIEW_SCHEMA)
+    resolver = RefResolver.from_schema(
+        action_schema,
+        store={"human_review.schema.json": human_review_schema},
+    )
+    return Draft202012Validator(action_schema, resolver=resolver)
 
-    assert _validate_action_receipt(receipt, action_schema, human_review_schema) == []
+
+def test_safe_action_receipt_matches_schema(action_validator: Draft202012Validator) -> None:
+    receipt = _load_json(SAFE_RECEIPT)
+
+    assert _validation_errors(action_validator, receipt) == []
     assert receipt["decision"] == "allowed"
     assert receipt["human_review"]["required"] is False
 
 
-def test_blocked_action_receipt_matches_schema() -> None:
+def test_blocked_action_receipt_matches_schema(action_validator: Draft202012Validator) -> None:
     receipt = _load_json(BLOCKED_RECEIPT)
-    action_schema = _load_json(ACTION_SCHEMA)
-    human_review_schema = _load_json(HUMAN_REVIEW_SCHEMA)
 
-    assert _validate_action_receipt(receipt, action_schema, human_review_schema) == []
+    assert _validation_errors(action_validator, receipt) == []
     assert receipt["decision"] == "blocked"
     assert receipt["human_review"]["required"] is True
     assert receipt["human_review"]["status"] == "pending"
@@ -49,56 +60,68 @@ def test_examples_preserve_public_boundary() -> None:
             assert marker not in text
 
 
-def test_missing_required_field_fails_validation() -> None:
+def test_missing_required_field_fails_validation(
+    action_validator: Draft202012Validator,
+) -> None:
     receipt = _load_json(SAFE_RECEIPT)
-    action_schema = _load_json(ACTION_SCHEMA)
-    human_review_schema = _load_json(HUMAN_REVIEW_SCHEMA)
     receipt.pop("decision")
 
-    errors = _validate_action_receipt(receipt, action_schema, human_review_schema)
+    errors = _validation_errors(action_validator, receipt)
 
-    assert "missing required field: decision" in errors
+    assert any("'decision' is a required property" in error for error in errors)
 
 
-def _validate_action_receipt(
+def test_invalid_decision_enum_fails_validation(
+    action_validator: Draft202012Validator,
+) -> None:
+    receipt = _load_json(SAFE_RECEIPT)
+    receipt["decision"] = "auto_executed"
+
+    errors = _validation_errors(action_validator, receipt)
+
+    assert any("auto_executed" in error for error in errors)
+
+
+def test_unexpected_top_level_field_fails_validation(
+    action_validator: Draft202012Validator,
+) -> None:
+    receipt = _load_json(SAFE_RECEIPT)
+    receipt["private_prompt"] = "synthetic placeholder that should still be rejected"
+
+    errors = _validation_errors(action_validator, receipt)
+
+    assert any("Additional properties are not allowed" in error for error in errors)
+
+
+def test_missing_nested_human_review_field_fails_validation(
+    action_validator: Draft202012Validator,
+) -> None:
+    receipt = _load_json(BLOCKED_RECEIPT)
+    receipt["human_review"] = copy.deepcopy(receipt["human_review"])
+    receipt["human_review"].pop("status")
+
+    errors = _validation_errors(action_validator, receipt)
+
+    assert any("'status' is a required property" in error for error in errors)
+
+
+def test_invalid_nested_human_review_enum_fails_validation(
+    action_validator: Draft202012Validator,
+) -> None:
+    receipt = _load_json(BLOCKED_RECEIPT)
+    receipt["human_review"] = copy.deepcopy(receipt["human_review"])
+    receipt["human_review"]["status"] = "silently_approved"
+
+    errors = _validation_errors(action_validator, receipt)
+
+    assert any("silently_approved" in error for error in errors)
+
+
+def _validation_errors(
+    validator: Draft202012Validator,
     receipt: dict,
-    action_schema: dict,
-    human_review_schema: dict,
 ) -> list[str]:
-    errors: list[str] = []
-
-    errors.extend(_validate_object(receipt, action_schema))
-    if isinstance(receipt.get("human_review"), dict):
-        errors.extend(
-            f"human_review.{error}"
-            for error in _validate_object(receipt["human_review"], human_review_schema)
-        )
-
-    return errors
-
-
-def _validate_object(data: dict, schema: dict) -> list[str]:
-    errors: list[str] = []
-
-    for field in schema.get("required", []):
-        if field not in data:
-            errors.append(f"missing required field: {field}")
-
-    allowed_properties = set(schema.get("properties", {}))
-    for field, value in data.items():
-        if field not in allowed_properties:
-            errors.append(f"unexpected field: {field}")
-            continue
-
-        property_schema = schema["properties"][field]
-        if "enum" in property_schema and value not in property_schema["enum"]:
-            errors.append(f"invalid enum value for {field}: {value}")
-        if property_schema.get("type") == "boolean" and not isinstance(value, bool):
-            errors.append(f"invalid boolean field: {field}")
-        if property_schema.get("type") == "string" and not isinstance(value, str):
-            errors.append(f"invalid string field: {field}")
-
-    return errors
+    return sorted(error.message for error in validator.iter_errors(receipt))
 
 
 def _load_json(path: Path) -> dict:
