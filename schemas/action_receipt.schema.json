@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "action_receipt.schema.json",
   "title": "Synthetic Agent Action Receipt",
   "type": "object",
   "required": [
