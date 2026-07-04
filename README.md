@@ -19,14 +19,15 @@ Agent systems can be useful only if their actions can be reviewed, bounded, and 
 - public-safe synthetic examples
 - pytest verification
 
-## Current Public Status
+## Included
 
-- Synthetic safe action receipt: present
-- Synthetic blocked action receipt: present
-- Action receipt schema: present
-- Human review schema: present
-- Tests: present
-- Data boundary: synthetic only
+- one synthetic allowed-action receipt
+- one synthetic blocked-action receipt
+- action receipt JSON schema
+- human review JSON schema
+- pytest validation
+- GitHub Actions test workflow
+- synthetic examples only
 
 ## Repository Structure
 
