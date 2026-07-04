@@ -15,7 +15,8 @@ Agent systems can be useful only if their actions can be reviewed, bounded, and 
 - audit trail design
 - safe versus blocked action records
 - human review checkpoints
-- schema-backed receipt validation
+- JSON Schema-backed receipt validation
+- negative tests for invalid or incomplete receipts
 - public-safe synthetic examples
 - pytest verification
 
@@ -28,6 +29,19 @@ Agent systems can be useful only if their actions can be reviewed, bounded, and 
 - pytest validation
 - GitHub Actions test workflow
 - synthetic examples only
+
+## Validation Coverage
+
+The test suite checks that:
+
+- valid allowed-action receipts pass schema validation
+- valid blocked-action receipts pass schema validation
+- missing required fields fail validation
+- invalid decision enum values fail validation
+- unexpected top-level fields fail validation
+- missing nested human-review fields fail validation
+- invalid nested human-review status values fail validation
+- examples avoid prohibited private-data markers
 
 ## Repository Structure
 
