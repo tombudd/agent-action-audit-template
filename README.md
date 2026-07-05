@@ -6,6 +6,8 @@ This repository uses synthetic examples only. It does not include private prompt
 
 [![Tests](https://github.com/tombudd/agent-action-audit-template/actions/workflows/test.yml/badge.svg)](https://github.com/tombudd/agent-action-audit-template/actions/workflows/test.yml)
 
+Release: [v1.0.0](https://github.com/tombudd/agent-action-audit-template/releases/tag/v1.0.0)
+
 ## Purpose
 
 Agent systems can be useful only if their actions can be reviewed, bounded, and reconstructed. This template shows one small public pattern for representing safe and blocked agent actions with fake receipts and human review metadata.
