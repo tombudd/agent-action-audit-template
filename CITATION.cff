@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this template repository, please cite it using the metadata below."
+title: "Agent Action Audit Template"
+type: software
+authors:
+  - family-names: Budd
+    given-names: Tom
+repository-code: "https://github.com/tombudd/agent-action-audit-template"
+url: "https://github.com/tombudd/agent-action-audit-template"
+version: "1.0.0"
+date-released: "2026-07-05"
+abstract: "A clean-room public template for synthetic agent action receipts, human-review metadata, JSON schemas, negative tests, CI, and explicit public/private disclosure boundaries."
+keywords:
+  - ai-governance
+  - agentic-ai
+  - auditability
+  - json-schema
+  - human-review
+license: MIT
