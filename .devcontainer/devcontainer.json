@@ -1,0 +1,15 @@
+{
+  "name": "Agent Action Audit Template",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "postCreateCommand": "if [ -f requirements.txt ]; then pip install -r requirements.txt; fi",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      },
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  }
+}
