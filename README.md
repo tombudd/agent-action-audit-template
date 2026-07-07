@@ -12,12 +12,24 @@ Release: [v1.0.0](https://github.com/tombudd/agent-action-audit-template/release
 
 Agent systems can be useful only if their actions can be reviewed, bounded, and reconstructed. This template shows one small public pattern for representing safe and blocked agent actions with fake receipts and human review metadata.
 
+## Two Layers
+
+This repository now has two complementary layers:
+
+- receipt schema and human review templates
+- local request classifier demo
+
+The schema layer shows how to represent allowed and blocked action records. The classifier demo shows how a local request can be routed before any action is taken.
+
 ## What This Demonstrates
 
 - audit trail design
 - safe versus blocked action records
 - human review checkpoints
 - JSON Schema-backed receipt validation
+- deterministic local request classification
+- preview versus execution boundaries
+- public-claim and remote-action guard checks
 - negative tests for invalid or incomplete receipts
 - public-safe synthetic examples
 - pytest verification
@@ -31,6 +43,8 @@ Agent systems can be useful only if their actions can be reviewed, bounded, and 
 - pytest validation
 - GitHub Actions test workflow
 - synthetic examples only
+- local classifier demo cases
+- generated sample classifier receipts
 
 ## Validation Coverage
 
@@ -44,6 +58,11 @@ The test suite checks that:
 - missing nested human-review fields fail validation
 - invalid nested human-review status values fail validation
 - examples avoid prohibited private-data markers
+- classifier demo cases route as expected
+- ambiguous requests fail safe to human approval
+- generated classifier receipts include boundary flags
+- public text avoids assertive overclaim language
+- runtime demo code avoids network, deploy, GitHub write, and secret-environment patterns
 
 ## Repository Structure
 
@@ -54,13 +73,21 @@ agent-action-audit-template/
 │       └── test.yml
 ├── docs/
 │   ├── audit_log_design.md
-│   └── human_review_flow.md
+│   ├── human_review_flow.md
+│   ├── EVAL_FACTSHEET.md
+│   ├── LIMITATIONS.md
+│   └── PUBLIC_CLAIM_BOUNDARY.md
 ├── examples/
 │   ├── blocked_action_receipt.json
+│   ├── demo_cases.jsonl
 │   └── safe_action_receipt.json
 ├── schemas/
 │   ├── action_receipt.schema.json
 │   └── human_review.schema.json
+├── src/
+│   └── agent_action_audit/
+├── tools/
+│   └── run_demo.py
 ├── tests/
 │   └── test_receipt_schema.py
 ├── README.md
@@ -72,6 +99,12 @@ agent-action-audit-template/
 ```bash
 pip install -r requirements.txt
 pytest
+```
+
+Run the local classifier demo:
+
+```bash
+python3 tools/run_demo.py
 ```
 
 ## Limitations

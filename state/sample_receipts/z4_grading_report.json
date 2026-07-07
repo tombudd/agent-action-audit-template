@@ -1,0 +1,28 @@
+{
+  "classification": "PASS_AGENT_ACTION_AUDIT_LOCAL_DEMO",
+  "score": 100,
+  "receipt_count": 6,
+  "receipts_path": "state/sample_receipts/demo_receipts.jsonl",
+  "tests_expected": [
+    "tests/test_classifier.py",
+    "tests/test_public_claim_language_guard.py",
+    "tests/test_receipt_schema.py",
+    "tests/test_network_and_remote_action_absence.py"
+  ],
+  "boundary_flags": {
+    "external_network_call_allowed": false,
+    "github_write_allowed": false,
+    "deployment_allowed": false,
+    "secret_access_allowed": false,
+    "memory_promotion_allowed": false,
+    "runtime_authority_mutation_allowed": false,
+    "public_claim_allowed": false
+  },
+  "known_limitations": [
+    "Keyword routing is intentionally small.",
+    "Receipts describe local classifier behavior only.",
+    "Public release requires separate human approval."
+  ],
+  "human_approval_step_required_before_public_release": "Founder review of local report, public language, repository history, and release target.",
+  "failures": []
+}
