@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "repository": "tombudd/agent-action-audit-template",
+  "finding_id": "tombudd/agent-action-audit-template:.github/workflows/test.yml:node20-actions",
+  "owner": "Tom",
+  "base_commit": "857700e8bc3ae4bae40c7a695b7fe2640234e13c",
+  "last_scan": "2026-11-06",
+  "priority": "high",
+  "proposed_triage_target": "2026-11-13",
+  "vendor_retirement_date": "2026-09-23",
+  "state": "PATCHED",
+  "source": "https://github.blog/changelog/2026-09-23-node-20-is-no-longer-available-in-github-actions/",
+  "pins": {
+    "checkout": "fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+    "setup_python": "ece7cb06caefa5fff74198d8649806c4678c61a1"
+  },
+  "acceptance": [
+    "Exact upstream node24 action metadata",
+    "Eight baseline and candidate schema tests pass",
+    "No schema, example, receipt or test change",
+    "Exact-head hosted CI and separate substantive review required"
+  ],
+  "validation": {
+    "baseline": "8 passed; Python 3.12.14",
+    "candidate": "8 passed, same local environment; YAML structural check PASS",
+    "source_git_blobs": "20/20 verified",
+    "hosted_ci": "pending"
+  },
+  "reviewer": null,
+  "exceptions": [],
+  "rollback": {
+    "method": "Restore workflow from bound base commit or close unmerged draft; remove only this candidate updater/register if reverting the full change",
+    "live_rehearsal": "NOT_RUN",
+    "limitation": "Old Node20 action declarations are not a supported long-term rollback"
+  },
+  "authority_delta": "NONE",
+  "scope": "Public synthetic template CI only; no product runtime effect"
+}
